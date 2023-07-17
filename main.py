@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.dispatcher import FSMContext
 
 from config import API_TOKEN                                    # Loading API
-from database import db_start, create_profile, edit_profile     # Loading database code
+from database import db_start, create_profile, edit_profile, count_profile     # Loading database code
 from keyboards import get_kb, get_cancel_kb                     # Loading keyboards
 
 # Launch
@@ -19,6 +19,21 @@ bot = Bot(API_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot=bot, storage=storage)
 
+# Defining HELP
+HELP_COMMAND = """
+Commands:
+/help - <em>list of commands</em> ℹ️
+/description - <em>decsription of the bot</em> 🖼
+/create - <em>create/recreate profile</em> 🆕
+/cancel - <em>cancel creation of the profile</em> ❌
+/search - <em>look for contacts</em> 🔎
+"""
+
+DESCRIPTION = """
+This bot can help you to find useful contacts or make you useful.
+"""
+
+
 # Defining FSM states
 class ProfileStatesGroup(StatesGroup):
     photo = State()
@@ -31,8 +46,32 @@ class ProfileStatesGroup(StatesGroup):
 
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message) -> None:
-    await message.answer(text='Welcome! To create profile type /create',
+    await message.answer(text="""Welcome to 👨‍💼 <b>Useful contacts</b> 👩‍💼 bot!\nType /help for information""",
+                         parse_mode='html',
                          reply_markup=get_kb())
+
+
+@dp.message_handler(commands=['help'])
+async def cmd_help(message: types.Message) -> None:
+    await message.answer(text=HELP_COMMAND,
+                         parse_mode='html',
+                         reply_markup=get_kb())
+
+
+@dp.message_handler(commands=['description'])
+async def cmd_desc(message: types.Message) -> None:
+    await message.answer(text=DESCRIPTION,
+                         parse_mode='html',
+                         reply_markup=get_kb())
+    
+
+# @dp.message_handler(commands=['search'])
+# async def cmd_desc(message: types.Message) -> None:
+#     await message.answer(text=count_profile())
+#     # await bot.send_photo(
+#     #     chat_id=message.chat.id
+        
+#     # )
 
 
 @dp.message_handler(commands=['create'])
@@ -40,7 +79,7 @@ async def cmd_create(message: types.Message) -> None:
     await message.reply(text='Let\'s create your profile. Load your photo:',
                         reply_markup=get_cancel_kb())
     
-    await create_profile(user_id=message.from_user.id)
+    await create_profile(user_id=message.from_user.id, username = message.from_user.username)
 
     await ProfileStatesGroup.photo.set()
 
@@ -65,7 +104,7 @@ async def load_photo(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         data['photo'] = message.photo[0].file_id
     
-    await message.reply('Type your name')
+    await message.reply('Type your name:')
     await ProfileStatesGroup.next()
 
 
@@ -88,7 +127,7 @@ async def load_age(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         data['age'] = message.text
     
-    await message.reply('Tell about yourself')
+    await message.reply('Tell about yourself:')
     await ProfileStatesGroup.next()
 
 
@@ -102,7 +141,7 @@ async def load_description(message: types.Message, state: FSMContext) -> None:
                              caption=f"{data['name']}, {data['age']}\n{data['description']}")
 
     await edit_profile(state, user_id=message.from_user.id)
-    await message.reply(text='You profile created succesfully',
+    await message.reply(text="Your profile created succesfully!",
                         reply_markup=get_kb())
     await state.finish()
 
