@@ -1,11 +1,10 @@
 import sqlite3 as sq
-
-global db, cur
-
-db = sq.connect('profiles.db')
-cur = db.cursor()
+import random
 
 async def db_start():
+    global db, cur
+    db = sq.connect('profiles.db')
+    cur = db.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS profiles(
                 user_id TEXT PRIMATY KEY,
                 username TEXT,
@@ -15,7 +14,7 @@ async def db_start():
                 description TEXT
                 )
     """)
-    
+
     db.commit()
 
 async def create_profile(user_id, username):
@@ -32,6 +31,23 @@ async def edit_profile(state, user_id):
         db.commit()
 
 
-# async def count_profile():
-#     number = cur.execute("SELECT COUNT(*) FROM profiles;")
-#     await number
+async def get_rnd_profile():
+    db.row_factory = sq.Row
+    cur = db.cursor()
+    cur.execute("SELECT * FROM profiles;")
+    rows_as_dict = cur.fetchall()
+    global get_profile
+    try:
+        get_profile_tmp = get_profile
+    except NameError:
+        get_profile = {}
+        get_profile_tmp = {}
+    while True:
+        get_profile = random.choice(rows_as_dict)
+        if get_profile != get_profile_tmp:
+            break
+    return get_profile
+
+async def db_end():
+    cur.close()
+    db.close()

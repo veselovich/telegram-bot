@@ -3,23 +3,28 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.dispatcher import FSMContext
 
-from config import API_TOKEN                                    # Loading API
-from database import db_start, create_profile, edit_profile, count_profile     # Loading database code
-from keyboards import get_kb, get_cancel_kb                     # Loading keyboards
 
-# Launch
+from config import API_TOKEN                                                            # Loading API
+from database import db_start, create_profile, edit_profile, get_rnd_profile, db_end    # Loading database code
+from keyboards import get_kb, get_cancel_kb, get_ikb                                    # Loading keyboards
+
+
+# Launch/End
 async def on_startup(_):
     await db_start()
     print("The server had been launched!")
+async def on_shutdown(_):
+    await db_end()
+    print("The server had been shutted down!")
 
-# TODO: on_shutdown
 
 # Creating bot, dispatcher and allocating memory for FSM
 bot = Bot(API_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot=bot, storage=storage)
 
-# Defining HELP
+
+# Defining HELP/DESCRIPTION
 HELP_COMMAND = """
 Commands:
 /help - <em>list of commands</em> ℹ️
@@ -28,9 +33,8 @@ Commands:
 /cancel - <em>cancel creation of the profile</em> ❌
 /search - <em>look for contacts</em> 🔎
 """
-
 DESCRIPTION = """
-This bot can help you to find useful contacts or make you useful.
+This bot can help you to find useful contacts or help you to be useful.
 """
 
 
@@ -46,7 +50,7 @@ class ProfileStatesGroup(StatesGroup):
 
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message) -> None:
-    await message.answer(text="""Welcome to 👨‍💼 <b>Useful contacts</b> 👩‍💼 bot!\nType /help for information""",
+    await message.answer(text="Welcome to 👨‍💼 <b>Useful contacts</b> 👩‍💼 bot!\nType /help for information.",
                          parse_mode='html',
                          reply_markup=get_kb())
 
@@ -65,22 +69,20 @@ async def cmd_desc(message: types.Message) -> None:
                          reply_markup=get_kb())
     
 
-# @dp.message_handler(commands=['search'])
-# async def cmd_desc(message: types.Message) -> None:
-#     await message.answer(text=count_profile())
-#     # await bot.send_photo(
-#     #     chat_id=message.chat.id
-        
-#     # )
+@dp.message_handler(commands=['search'])
+async def cmd_srch(message: types.Message) -> None:
+    rnd = await get_rnd_profile()
+    await bot.send_photo(chat_id=message.chat.id,
+                        photo=rnd["photo"],
+                        caption=f"{rnd['name']}, {rnd['age']}\n{rnd['description']}\n\nContact: {rnd['username']}",
+                        reply_markup=get_ikb())
 
 
 @dp.message_handler(commands=['create'])
 async def cmd_create(message: types.Message) -> None:
     await message.reply(text='Let\'s create your profile. Load your photo:',
                         reply_markup=get_cancel_kb())
-    
     await create_profile(user_id=message.from_user.id, username = message.from_user.username)
-
     await ProfileStatesGroup.photo.set()
 
 
@@ -88,9 +90,8 @@ async def cmd_create(message: types.Message) -> None:
 async def cmd_cancel(message: types.Message, state: FSMContext):
     if state is None:
         return
-    
     await state.finish()
-    await message.reply(text='You\'ve interrupted creation',
+    await message.reply(text='You\'ve interrupted creation!',
                         reply_markup=get_kb())
 
 
@@ -103,7 +104,6 @@ async def check_photo(message: types.Message):
 async def load_photo(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         data['photo'] = message.photo[0].file_id
-    
     await message.reply('Type your name:')
     await ProfileStatesGroup.next()
 
@@ -112,7 +112,6 @@ async def load_photo(message: types.Message, state: FSMContext) -> None:
 async def load_name(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         data['name'] = message.text
-    
     await message.reply('What\'s your age?')
     await ProfileStatesGroup.next()
 
@@ -126,8 +125,8 @@ async def check_age(message: types.Message):
 async def load_age(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         data['age'] = message.text
-    
-    await message.reply('Tell about yourself:')
+    await message.reply("""Tell a useful info about yourself:
+                        (It might be occupation, hobbies or any other useful info)""")
     await ProfileStatesGroup.next()
 
 
@@ -135,18 +134,36 @@ async def load_age(message: types.Message, state: FSMContext) -> None:
 async def load_description(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         data['description'] = message.text
-
         await bot.send_photo(chat_id=message.from_user.id,
                              photo=data['photo'],
                              caption=f"{data['name']}, {data['age']}\n{data['description']}")
-
     await edit_profile(state, user_id=message.from_user.id)
     await message.reply(text="Your profile created succesfully!",
                         reply_markup=get_kb())
     await state.finish()
 
 
+@dp.message_handler()
+async def cmd_empty(message: types.Message) -> None:
+    await message.answer(text="Type /help for information.",
+                         reply_markup=get_kb())
+    await message.delete()
+
+
+@dp.callback_query_handler()
+async def callback_search(callback: types.CallbackQuery):
+    if callback.data == 'next':
+        await callback.answer(text='Next contact')
+        rnd = await get_rnd_profile()
+        await callback.message.edit_media(types.InputMedia(
+            media=rnd['photo'],
+            photo='photo',
+            caption=f"{rnd['name']}, {rnd['age']}\n{rnd['description']}\n\nContact: @{rnd['username']}"),
+            reply_markup=get_ikb())
+
+
 if __name__ == "__main__":
     executor.start_polling(dispatcher=dp,
                            skip_updates=True,
-                           on_startup=on_startup)
+                           on_startup=on_startup,
+                           on_shutdown=on_shutdown)
