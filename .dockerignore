@@ -5,3 +5,5 @@ Procfile
 runtime.txt
 README.md
 MIT-LICENSE.txt
+fly.toml
+.DS_Store
