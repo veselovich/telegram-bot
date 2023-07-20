@@ -13,8 +13,8 @@ Project is a Python Aiogram library-based application for [Telegram](https://tel
 - **main.py** - main executive file
 - **database.py** - contains functions, that allowes to lauch, shutdown and use database
 - **keyboards.py** - contains functions, that gives user access to keyboards
-- **profile.db** - database file, which contains information about users who created their profiles
-- **config.py** - file contains bot API
+- **profile.db** - contains database about users who created their profiles
+- **config.py** - contains bot API
 
 _PLEASE NOTE:_ config.py is provided for test purposes. To obtain your own API use [BotFather](https://t.me/BotFather). While depolyment, environment variable API_TOKEN should be set directly through the CLI.
 ***
@@ -22,13 +22,9 @@ _PLEASE NOTE:_ config.py is provided for test purposes. To obtain your own API u
 - **requirements.txt**
 - **Dockfile**
 - **.dockerignore**
-
-  [Heroku](https://heroku.com/):
-  - **Procfile**
-  - **runtime.txt**
-  
-  [Fly](https://fly.io/):
-  - **fly.toml**
+- **runtime.txt**
+  - **Procfile** [(Heroku)](https://heroku.com/)
+  - **fly.toml** [(Fly)](https://fly.io/)
 #### Roadmap
 - [x] basic commands handlers
 - [x] profile creating process (using FSM)
