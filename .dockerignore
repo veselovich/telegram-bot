@@ -1,4 +1,7 @@
 # flyctl launch added from .gitignore
-**/__pycache__
-**/venv
-fly.toml
+__pycache__
+venv
+Procfile
+runtime.txt
+README.md
+MIT-LICENSE.txt
