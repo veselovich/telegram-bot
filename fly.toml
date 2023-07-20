@@ -1,5 +1,5 @@
 app = "delicate-flower-722"
-primary_region = "mia"
+# primary_region = "mia"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
@@ -22,4 +22,4 @@ kill_timeout = 5
 
 [[services.ports]]
   handlers = ["http"]
-  port = 5000
+  port = 443
