@@ -25,6 +25,7 @@ _PLEASE NOTE:_ config.py is provided for test purposes. To obtain your own API u
 - **runtime.txt**
   - **Procfile** [(Heroku)](https://heroku.com/)
   - **fly.toml** [(Fly)](https://fly.io/)
+***
 #### Roadmap
 - [x] basic commands handlers
 - [x] profile creating process (using FSM)
