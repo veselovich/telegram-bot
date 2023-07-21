@@ -125,8 +125,7 @@ async def check_age(message: types.Message):
 async def load_age(message: types.Message, state: FSMContext) -> None:
     async with state.proxy() as data:
         data['age'] = message.text
-    await message.reply("""Tell a useful info about yourself:
-                        (It might be occupation, hobbies or any other useful info)""")
+    await message.reply("""Tell a useful info about yourself:\n(It might be occupation, hobbies or any other useful info)""")
     await ProfileStatesGroup.next()
 
 

@@ -1,5 +1,5 @@
 # "Useful people" teleram bot
-#### Video Demo:  <URL HERE>
+#### Video Demo: https://youtu.be/trI6cabOP8I
 #### Description:
 
 This project was done as a final project of [Harward CS50](https://cs50.harvard.edu/x/2023/) course.
