@@ -2,7 +2,7 @@
 #### Video Demo:  <URL HERE>
 #### Description:
 
-This project was done as a final project of [Harward CS50](https://cs50.harvard.edu/x/2023/) course.
+This project was done as a final project of [Harvard CS50](https://cs50.harvard.edu/x/2023/) course.
 
 While creating, materials of ["Telegram Bot (aiogram) - essentials"](https://www.youtube.com/watch?v=ayUBlf9pvn0&list=PLe-iIMbo5JOJm6DRTjhleHojroS-Bbocr) was used.
 ***
