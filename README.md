@@ -2,7 +2,7 @@
 #### Video Demo: https://youtu.be/trI6cabOP8I
 #### Description:
 
-This project was done as a final project of [Harward CS50](https://cs50.harvard.edu/x/2023/) course.
+This project was done as a final project of [Harvard CS50](https://cs50.harvard.edu/x/2023/) course.
 
 While creating, materials of ["Telegram Bot (aiogram) - essentials"](https://www.youtube.com/watch?v=ayUBlf9pvn0&list=PLe-iIMbo5JOJm6DRTjhleHojroS-Bbocr) was used.
 ***
@@ -13,16 +13,18 @@ Project is a Python Aiogram library-based application for [Telegram](https://tel
 - **main.py** - main executive file
 - **database.py** - contains functions, that allowes to lauch, shutdown and use database
 - **keyboards.py** - contains functions, that gives user access to keyboards
-- **profile.db** - database file, which contains information about users who created their profiles
-***
-#### Deployment files ([Heroku](https://heroku.com/)):
-- **Procfile**
-- **runtime.txt**
-- **requirements.txt**
+- **profile.db** - contains database about users who created their profiles
+- **config.py** - contains bot API
 
-_Please notice:_
-- _For deployment you need bot account using [BotFather](https://t.me/BotFather)_
-- _config.py file contains testing API and not required for deployment. Use Heroku CLI to assign API_TOKEN_
+_PLEASE NOTE:_ config.py is provided for test purposes. To obtain your own API use [BotFather](https://t.me/BotFather). While depolyment, environment variable API_TOKEN should be set directly through the CLI.
+***
+#### Deployment files
+- **requirements.txt**
+- **Dockfile**
+- **.dockerignore**
+- **runtime.txt**
+  - **Procfile** [(Heroku)](https://heroku.com/)
+  - **fly.toml** [(Fly)](https://fly.io/)
 ***
 #### Roadmap
 - [x] basic commands handlers
