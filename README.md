@@ -1,12 +1,11 @@
-# "Useful people" teleram bot
-#### Video Demo: https://youtu.be/trI6cabOP8I
-#### Description:
+# "Useful contacts" teleram bot
+#### Project
 
 This project was done as a final project of [Harvard CS50](https://cs50.harvard.edu/x/2023/) course.
 
 While creating, materials of ["Telegram Bot (aiogram) - essentials"](https://www.youtube.com/watch?v=ayUBlf9pvn0&list=PLe-iIMbo5JOJm6DRTjhleHojroS-Bbocr) was used.
 ***
-#### Project
+#### Description
 Project is a Python Aiogram library-based application for [Telegram](https://telegram.org) messenger. This bot has a database, which stores an information about users of this bot. Each user can add infomation about itself (only) or search for an other random user. No registration is needed. An idea of the bot is to help people to find each other by information they provided about themselves.
 ***
 #### Core Files
