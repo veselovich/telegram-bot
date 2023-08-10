@@ -30,6 +30,7 @@ _PLEASE NOTE:_ config.py is provided for test purposes. To obtain your own API u
 - [x] profile creating process (using FSM)
 - [x] database connection (using sqlite3)
 - [x] random contact search (using CallbackQuery)
+- [ ] @dp.errors_handler(exeption=Bot Blocked)
 - [ ] categorizing contacts/search by categories
 - [ ] like/dislike system
 - [ ] profile rating
